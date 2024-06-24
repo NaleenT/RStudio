@@ -1,7 +1,14 @@
-model <- lm(mpg ~ hp, data = mtcars)
+set.seed(123)
 
-new_car <- data.frame(hp = 150)
+train_indices <- sample(1:nrow(iris), 0.7 *nrow(iris))
 
-predicted_mpg <- predict(model, newdata = new_car)
+train_data <- iris[train_indices, ]
 
-cat("The predicted MPG for a car with 150 horsepower is:", predicted_mpg)
+test_data <- iris[-train_indices, ]
+
+library(class)
+
+model <- knn(train = train_data[, -5], test = test_data[, -5], cl = train_data[, 5], k = 3)
+accuracy <- sum(model == test_data[, -5]) / nrow(test_data)
+
+cat("The accuracy of the k-NN calssifier on the testing set is:", accuracy)
